@@ -63,7 +63,7 @@ input[type="password"]:focus {
   outline: 2px solid black;
 }
 
-#auth-button-login {
+.auth-button {
   display: flex;
   justify-content: center;
   color: white;
@@ -71,7 +71,7 @@ input[type="password"]:focus {
   width: 100%;
 }
 
-#auth-button-login:hover {
+.auth-button:hover {
   background-color: rgb(195, 0, 0);
 }
 

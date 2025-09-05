@@ -24,11 +24,11 @@
   z-index: 3;
 }
 
-body:not(.dark) .buttons:not(#auth-button-login):hover {
+body:not(.dark) .buttons:not(.auth-button):hover {
   color: red;
 }
 
-body.dark .buttons:not(#auth-button-login):hover {
+body.dark .buttons:not(.auth-button):hover {
   border-color: red;
 }
 

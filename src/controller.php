@@ -1,6 +1,8 @@
 <?php
 class Controller
 {
+    private $requestMethod;
+
     function login() {
         echo "I am login";
     }
@@ -40,5 +42,17 @@ class Controller
         }
 
         return htmlspecialchars(stripcslashes($_POST[$input])); // https://www.php.net/manual/en/function.stripslashes.php
+    }
+
+    public function getRequestMethod() {
+        return $this->requestMethod;
+    }
+
+    public function setRequestMethod(string $methodName) {
+        if ($methodName === '') {
+            throw new Exception('RequestMethod cannot be empty.');
+        }
+
+        $this->requestMethod = $methodName;
     }
 }
