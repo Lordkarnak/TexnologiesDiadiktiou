@@ -13,8 +13,9 @@ try {
     $controller = new Controller($conn);
     $controller->setRequestMethod($_SERVER['REQUEST_METHOD']);
     $response = $controller->$action();
-    $controller->render($response);
+    echo json_encode($response);
 } catch(Exception $e) {
+    http_response_code(500);
     echo json_encode($e->getMessage());
 }
 exit;
