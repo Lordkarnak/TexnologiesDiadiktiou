@@ -40,13 +40,11 @@ class Controller
     }
 
     function register() {
-        $first_name = $this->validate("firstname");
-        $last_name = $this->validate("lastname");
-        $username= $this->validate("username");
-        $email = $this->validate("email");
-        $password = $this->validate("password");
-
-        $this->validate($_POST["firstname"]);
+        $first_name = $this->validate("firstname", true);
+        $last_name = $this->validate("lastname", true);
+        $username= $this->validate("username", true);
+        $email = $this->validate("email", true);
+        $password = $this->validate("password", true);
 
         $sql = "INSERT INTO user_data (first_name, last_name, username, email, password)
                 VALUES (?, ?, ?, ?, ?)";
