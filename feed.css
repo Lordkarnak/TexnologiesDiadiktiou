@@ -1,0 +1,42 @@
+.feed-container {
+  width: 100%;
+  max-width: calc(100vw - 220px); 
+  height: 100vh;
+  margin-left: 220px;
+  overflow-y: scroll; 
+  overflow-x: hidden;
+  border: 2px solid;
+  z-index: 2;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid;
+  z-index: 2;
+}
+
+.feed-item {
+  width: 100%;
+  height: 250px; 
+  overflow: hidden;
+  border-top: 2px solid;   
+  border-bottom: 2px solid;
+  border-left: none; 
+  border-right: none;
+  z-index: 2;
+}
+
+.feed-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+  z-index: 2;
+}
+/* 
+.feed-item img:hover {
+  transform: scale(1.05);
+  z-index: 2;
+} */
