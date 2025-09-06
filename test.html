@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Modal Example</title>
+        <link rel="stylesheet" href="test.css">
+        <script src="test.js"></script>
+    </head>
+    <body>
+
+  <div class="sign-container">
+    <div class="sign-buttons">
+      <div data-type="register" class="auth-button-modal buttons"><span>ΕΓΓΡΑΦΗ</span></div>
+      <div data-type="login" class="auth-button-modal buttons"><span>ΕΙΣΟΔΟΣ</span></div>
+    </div>
+
+    <div class="help">
+      Χρειάζεσαι βοήθεια; Κάνε κλικ <a href="help.html">Εδώ!</a>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form class="register-form" method="post">
+        <div class="label-input">
+          <label for="username">ΟΝΟΜΑ ΧΡΗΣΤΗ</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="label-input">
+          <label for="password">ΚΩΔΙΚΟΣ</label>
+          <input type="password" name="password" required>
+        </div>
+        <div>
+          <input type="checkbox" id="remember-me" name="remember-me" value="0">
+          <label for="remember-me">Να με θυμάσαι</label>
+        </div>
+        <div class="buttons auth-button"><span>ΕΙΣΟΔΟΣ</span></div>
+        <div id="login-a">
+          Ξέχασες τον <a href="#">κωδικό</a> σου;
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form class="register-form" method="post">
+        <div class="label-input">
+          <label for="new-username">ΟΝΟΜΑ ΧΡΗΣΤΗ</label>
+          <input type="text" name="new-username" required>
+        </div>
+        <div class="label-input">
+          <label for="new-email">EMAIL</label>
+          <input type="email" name="new-email" required>
+        </div>
+        <div class="label-input">
+          <label for="new-password">ΚΩΔΙΚΟΣ</label>
+          <input type="password" name="new-password" required>
+        </div>
+        <div class="buttons auth-button"><span>ΕΓΓΡΑΦΗ</span></div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

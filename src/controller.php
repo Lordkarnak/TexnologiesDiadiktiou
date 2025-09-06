@@ -3,8 +3,37 @@ class Controller
 {
     private $requestMethod;
 
-    function login() {
-        echo "I am login";
+    private $connection;
+
+    function __construct($conn) {
+        $this->connection = $conn;
+    }
+
+        public function login()
+    {
+        $username = $this->validate("username", true);
+        $password = $this->validate("password", true);
+        $remember_me = $this->validate("remember-me");
+
+        $stmt = $this->connection->prepare("SELECT * FROM user_data WHERE username = ? AND BINARY(password) = ?");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['username'] = $row['username'];
+
+            if ($remember_me) {
+                setcookie("username", $row['username'], time() + (86400 * 30), "/");
+            }
+            
+            return "help.html"; 
+            
+        } else {
+            throw new Exception("User not found.");
+        }
     }
 
     function register() {
@@ -41,7 +70,7 @@ class Controller
             throw new Exception($input.' is mandatory.');
         }
 
-        return htmlspecialchars(stripcslashes($_POST[$input])); // https://www.php.net/manual/en/function.stripslashes.php
+        return htmlspecialchars(stripcslashes($_POST[$input] ?? '')); // https://www.php.net/manual/en/function.stripslashes.php
     }
 
     public function getRequestMethod() {
@@ -54,5 +83,14 @@ class Controller
         }
 
         $this->requestMethod = $methodName;
+    }
+
+    public function render($file){
+        if (file_exists($file)) {
+            ob_start();
+            echo include($file);
+            ob_flush();
+            ob_end_clean();
+        }
     }
 }

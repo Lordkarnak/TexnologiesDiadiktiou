@@ -1,27 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let openBtns = document.getElementsByClassName("auth-button-modal");
-  const closeBtn = document.querySelector(".modal .close");
+  const authBtns = document.querySelectorAll(".auth-button-modal");
+  const closeBtns = document.querySelectorAll(".modal .close");
   const rememberMeButton = document.getElementById('remember-me');
-  const submitButton = document.getElementsByName('auth-button-submit')[0];
+  const submitButton = document.querySelector(".modal .auth-button");
   let isSubmitting = false;
   let modal;
   let buttonType;
 
-  Array.prototype.forEach.call(openBtns, function(button) {
+  Array.prototype.forEach.call(authBtns, function(button) {
     button.addEventListener("click", () => {
       buttonType = button.getAttribute('data-type');
       if (buttonType == 'login') {
         modal = document.getElementById('loginModal');
-      } else if (buttonType == 'signup') {
-        modal = document.getElementById('signupModal');
+      } else if (buttonType == 'register') {
+        modal = document.getElementById('registerModal');
       }
       modal.style.display = "flex";
     });
   });
 
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
+  closeBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+          btn.closest(".modal").style.display = "none";
+      });
   });
+
 
   if (rememberMeButton !== undefined) {
     rememberMeButton.addEventListener('click', function() {
@@ -34,32 +37,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (submitButton !== undefined) {
-    submitButton.addEventListener('click', function(event) {
-      event.preventDefault();
+    submitButton.addEventListener('click', async () => {
       isSubmitting = true;
-      postData('/index.php', buttonType);
+      let form = document.getElementsByTagName('form')[0];
+      let data = new FormData(form);
+      data.append("action", buttonType);
+      await fetch("/Konstantinos/TexnologiesDiadiktiou/index.php", {
+        method: "POST",
+        body: data,
+      }).then((response) => {
+        if (response.status == 200 && response.statusText == "OK"){
+          document.body.innerHTML = response.body;
+        }
+      });
+      
     });
   }
+  
+  // function postData(url, buttonType)
+  // {
 
-  function postData(url, buttonType)
-  {
-    let inputs = document.getElementsByTagName('input');
-    let inputObj = [{action: buttonType}];
-    Array.prototype.forEach.call(inputs, function(element) {
-      inputObj.push({
-        key: element.getAttribute('name'),
-        value: element.value
-      });
-    })
-    const postBody = JSON.stringify(inputObj);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            this.responseText;
-       }
-    };
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader('Content-Type', 'application/json');
-    xhttp.send(postBody);
-  }
+  //   var xhttp = new XMLHttpRequest();
+  //   xhttp.onreadystatechange = function() {
+  //       if (this.readyState == 4 && this.status == 200) {
+  //           this.responseText;
+  //      }
+  //   };
+  //   xhttp.open("POST", url, true);
+  //   xhttp.setRequestHeader('Content-Type', 'application/json');
+  //   xhttp.send(data);
+  // }
 });
