@@ -9,13 +9,16 @@ class Controller
         $this->connection = $conn;
     }
 
-        public function login()
+    public function login()
     {
         $username = $this->validate("username", true);
         $password = $this->validate("password", true);
         $remember_me = $this->validate("remember-me");
 
         $stmt = $this->connection->prepare("SELECT * FROM user_data WHERE username = ? AND BINARY(password) = ?");
+        if (!$stmt) {
+            throw new Exception($this->connection->error);
+        }
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -29,7 +32,7 @@ class Controller
                 setcookie("username", $row['username'], time() + (86400 * 30), "/");
             }
             
-            return "help.html"; 
+            return ['redirect' => 'authsite.php'];
             
         } else {
             throw new Exception("User not found.");
@@ -48,10 +51,10 @@ class Controller
         $sql = "INSERT INTO user_data (first_name, last_name, username, email, password)
                 VALUES (?, ?, ?, ?, ?)";
 
-        $stmt = mysqli_stmt_init($conn);
+        $stmt = mysqli_stmt_init($this->connection);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
-            die(mysqli_error($conn));
+            throw new Exception(mysqli_error($this->connection));
         }
 
         mysqli_stmt_bind_param($stmt, "sssss",
@@ -61,7 +64,11 @@ class Controller
                             $email,
                             $password);
 
-        mysqli_stmt_execute($stmt);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception($this->connection->error);
+        }
+ 
+        return ['closeModal' => 'true'];
     }
     
 

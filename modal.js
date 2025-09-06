@@ -40,17 +40,36 @@ document.addEventListener("DOMContentLoaded", () => {
     Array.prototype.forEach.call(submitButtons, function(button) {
       button.addEventListener('click', async () => {
         isSubmitting = true;
-        let form = document.getElementsByTagName('form')[0];
+        let form = document.getElementById(buttonType + 'Form');
         let data = new FormData(form);
         data.append("action", buttonType);
         await fetch("index.php", {
           method: "POST",
           body: data,
-        }).then((response) => {
-          if (response.status == 200 && response.statusText == "OK"){
-            document.body.innerHTML = response.body;
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Κάτι πήγε στραβά!');
           }
-        });
+          return response.json();
+        })
+        .then(function(data) {
+            if (data != '') {
+              if (data.redirect != undefined) {
+                window.location.href = data.redirect;
+              } else if (data.closeModal) {
+                  form.reset();
+                  form.closest(".modal").style.display = "none";
+              }
+            }
+        })
+        .catch(function(error) {
+          let messageBox = form.querySelector('.error-messagebox');
+            if (messageBox !== undefined) {
+              messageBox.innerHTML = error;
+            }
+        })
+
       });
     });
   }
