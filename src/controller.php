@@ -71,7 +71,7 @@ class Controller
     
 
     function validate($input, $mandatory=false) {
-        if ($mandatory == true && $input == '') {
+        if ($mandatory == true && empty($_POST[$input])) {
             throw new Exception($input.' is mandatory.');
         }
 
