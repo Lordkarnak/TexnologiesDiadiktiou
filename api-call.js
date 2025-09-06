@@ -14,7 +14,7 @@ window.addEventListener("load", () => {
     authButtons.forEach(function(button){
         button.addEventListener("click", function(){
             console.log(this)
-            callBack(this); //κάτσε διάβασε τι κάνει το This
+            //callBack(this); //κάτσε διάβασε τι κάνει το This
         }); //σε addEventListener δεν μπορώ να βάλω παραμέτρους άρα αυτό που κάνω είναι ανοίγω ένα function
     });
 })

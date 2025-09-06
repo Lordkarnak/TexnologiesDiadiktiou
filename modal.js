@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const authBtns = document.querySelectorAll(".auth-button-modal");
   const closeBtns = document.querySelectorAll(".modal .close");
   const rememberMeButton = document.getElementById('remember-me');
-  const submitButton = document.querySelector(".modal .auth-button");
+  const submitButtons = document.querySelectorAll(".modal .auth-button");
   let isSubmitting = false;
   let modal;
   let buttonType;
@@ -36,35 +36,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (submitButton !== undefined) {
-    submitButton.addEventListener('click', async () => {
-      isSubmitting = true;
-      let form = document.getElementsByTagName('form')[0];
-      let data = new FormData(form);
-      data.append("action", buttonType);
-      await fetch("/Konstantinos/TexnologiesDiadiktiou/index.php", {
-        method: "POST",
-        body: data,
-      }).then((response) => {
-        if (response.status == 200 && response.statusText == "OK"){
-          document.body.innerHTML = response.body;
-        }
+  if (submitButtons !== undefined) {
+    Array.prototype.forEach.call(submitButtons, function(button) {
+      button.addEventListener('click', async () => {
+        isSubmitting = true;
+        let form = document.getElementsByTagName('form')[0];
+        let data = new FormData(form);
+        data.append("action", buttonType);
+        await fetch("index.php", {
+          method: "POST",
+          body: data,
+        }).then((response) => {
+          if (response.status == 200 && response.statusText == "OK"){
+            document.body.innerHTML = response.body;
+          }
+        });
       });
-      
     });
   }
-  
-  // function postData(url, buttonType)
-  // {
-
-  //   var xhttp = new XMLHttpRequest();
-  //   xhttp.onreadystatechange = function() {
-  //       if (this.readyState == 4 && this.status == 200) {
-  //           this.responseText;
-  //      }
-  //   };
-  //   xhttp.open("POST", url, true);
-  //   xhttp.setRequestHeader('Content-Type', 'application/json');
-  //   xhttp.send(data);
-  // }
 });
