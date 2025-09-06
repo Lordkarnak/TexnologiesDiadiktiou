@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (buttonType == 'register') {
         modal = document.getElementById('registerModal');
       }
+      let form = modal.querySelector('form');
+      let messageBox = form.querySelector('.error-messagebox');
+      if (messageBox) messageBox.innerHTML = "&nbsp;";
       modal.style.display = "flex";
     });
   });
@@ -41,34 +44,38 @@ document.addEventListener("DOMContentLoaded", () => {
       button.addEventListener('click', async () => {
         isSubmitting = true;
         let form = document.getElementById(buttonType + 'Form');
+        let messageBox = form.querySelector('.error-messagebox');
+        if (messageBox) {
+        messageBox.innerHTML = "&nbsp;";
+        }
         let data = new FormData(form);
         data.append("action", buttonType);
         await fetch("index.php", {
           method: "POST",
           body: data,
         })
-        .then(response => {
+        .then(async response => {
+          let result = await response.json();
           if (!response.ok) {
-            throw new Error('Κάτι πήγε στραβά!');
+            throw new Error(result.error || "Κάτι πήγε στραβά!");
           }
-          return response.json();
+          return result;
         })
         .then(function(data) {
-            if (data != '') {
-              if (data.redirect != undefined) {
-                window.location.href = data.redirect;
-              } else if (data.closeModal) {
-                  form.reset();
-                  form.closest(".modal").style.display = "none";
-              }
+            if (data.redirect) {
+              window.location.href = data.redirect;
+            } else if (data.closeModal) {
+              form.reset();
+              form.closest(".modal").style.display = "none";
             }
         })
         .catch(function(error) {
           let messageBox = form.querySelector('.error-messagebox');
-            if (messageBox !== undefined) {
-              messageBox.innerHTML = error;
-            }
-        })
+          if (messageBox) {
+            messageBox.innerHTML = error.message; // now shows "username is mandatory."
+          }
+        });
+
 
       });
     });

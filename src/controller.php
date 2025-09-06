@@ -32,7 +32,7 @@ class Controller
                 setcookie("username", $row['username'], time() + (86400 * 30), "/");
             }
             
-            return ['redirect' => 'authsite.php'];
+            return ['redirect' => 'main.html'];
             
         } else {
             throw new Exception("User not found.");
@@ -72,7 +72,7 @@ class Controller
 
     function validate($input, $mandatory=false) {
         if ($mandatory == true && empty($_POST[$input])) {
-            throw new Exception($input.' is mandatory.');
+            throw new Exception('Όλα τα πεδία είναι υποχρεωτικά!');
         }
 
         return htmlspecialchars(stripcslashes($_POST[$input] ?? '')); // https://www.php.net/manual/en/function.stripslashes.php

@@ -15,7 +15,9 @@ try {
     $response = $controller->$action();
     echo json_encode($response);
 } catch(Exception $e) {
-    http_response_code(500);
-    echo json_encode($e->getMessage());
+//     http_response_code(500);
+//     echo json_encode($e->getMessage());
+    http_response_code(400); // use 400 for validation errors
+    echo json_encode(["error" => $e->getMessage()]);
 }
 exit;
