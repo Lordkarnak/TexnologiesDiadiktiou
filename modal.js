@@ -55,8 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(function(data) {
             if (data != '') {
-              console.log(data);
-              // window.location.href = data;
+              if (data.redirect != undefined) {
+                window.location.href = data.redirect;
+              } else if (data.closeModal) {
+                  form.reset();
+                  form.closest(".modal").style.display = "none";
+              }
             }
         })
         .catch(function(error) {
@@ -65,18 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
               messageBox.innerHTML = error;
             }
         })
-        
-        // .then((response) => {
-        //   data = response.json();
-        //   if (response.status == 200 && response.statusText == "OK"){
-        //     // if (response.text != '') {
-        //     //   window.location.href = response.text;
-        //     // }
-        //   } else {
-        //     
-        //   }
-        //   console.log(data);
-        // });
 
       });
     });

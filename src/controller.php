@@ -68,7 +68,7 @@ class Controller
             throw new Exception($this->connection->error);
         }
  
-        return ['redirect' => 'index.html'];
+        return ['closeModal' => 'true'];
     }
     
 
