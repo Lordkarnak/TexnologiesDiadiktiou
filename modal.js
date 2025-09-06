@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let modal;
   let buttonType;
 
+  // Open modal
   Array.prototype.forEach.call(authBtns, function(button) {
     button.addEventListener("click", () => {
       buttonType = button.getAttribute('data-type');
@@ -15,68 +16,85 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (buttonType == 'register') {
         modal = document.getElementById('registerModal');
       }
-      let form = modal.querySelector('form');
-      let messageBox = form.querySelector('.error-messagebox');
+
+      // Reset form and error message
+      const form = modal.querySelector('form');
+      form.reset();
+      const messageBox = form.querySelector('.error-messagebox');
       if (messageBox) messageBox.innerHTML = "&nbsp;";
+
+      // Reset input borders
+      form.querySelectorAll("input").forEach(i => i.classList.remove("error"));
+
       modal.style.display = "flex";
     });
   });
 
   closeBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-          btn.closest(".modal").style.display = "none";
-      });
+    btn.addEventListener("click", () => {
+      btn.closest(".modal").style.display = "none";
+    });
   });
 
+  window.addEventListener("click", (event) => {
+    if (modal && event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
 
-  if (rememberMeButton !== undefined) {
+  if (rememberMeButton) {
     rememberMeButton.addEventListener('click', function() {
-      if (this.checked) {
-        this.value = 1;
-      } else {
-        this.value = 0;
-      }
+      this.value = this.checked ? 1 : 0;
     });
   }
 
-  if (submitButtons !== undefined) {
+  if (submitButtons) {
     Array.prototype.forEach.call(submitButtons, function(button) {
       button.addEventListener('click', async () => {
+        if (isSubmitting) return;
         isSubmitting = true;
-        let form = document.getElementById(buttonType + 'Form');
-        let messageBox = form.querySelector('.error-messagebox');
-        if (messageBox) {
-        messageBox.innerHTML = "&nbsp;";
-        }
-        let data = new FormData(form);
+
+        const form = document.getElementById(buttonType + 'Form');
+        const messageBox = form.querySelector('.error-messagebox');
+
+        if (messageBox) messageBox.innerHTML = "&nbsp;";
+        form.querySelectorAll("input").forEach(i => i.classList.remove("error"));
+
+        const data = new FormData(form);
         data.append("action", buttonType);
-        await fetch("index.php", {
-          method: "POST",
-          body: data,
-        })
-        .then(async response => {
-          let result = await response.json();
+
+        try {
+          const response = await fetch("index.php", { method: "POST", body: data });
+          const result = await response.json();
+
           if (!response.ok) {
             throw new Error(result.error || "Κάτι πήγε στραβά!");
           }
-          return result;
-        })
-        .then(function(data) {
-            if (data.redirect) {
-              window.location.href = data.redirect;
-            } else if (data.closeModal) {
-              form.reset();
-              form.closest(".modal").style.display = "none";
+
+          const messageBox = form.querySelector('.error-messagebox');
+
+          if (buttonType === "register") {
+            // Εμφάνιση μηνύματος επιτυχίας για εγγραφή
+            if (messageBox) {
+              messageBox.style.color = "green";  // <-- change text to green
+              messageBox.innerHTML = "Επιτυχής εγγραφή! Μπορείς τώρα να συνδεθείς.";
             }
-        })
-        .catch(function(error) {
-          let messageBox = form.querySelector('.error-messagebox');
-          if (messageBox) {
-            messageBox.innerHTML = error.message; // now shows "username is mandatory."
+          } else if (result.redirect) {
+            window.location.href = result.redirect;
+          } else if (result.closeModal) {
+            form.closest(".modal").style.display = "none";
+            form.reset();
           }
-        });
-
-
+        } catch (error) {
+          // Highlight inputs and show error
+          form.querySelectorAll("input[required]").forEach(i => i.classList.add("error"));
+          if (messageBox) {
+            messageBox.style.color = "red"; // ensure error is red
+            messageBox.innerHTML = error.message;
+          }
+        } finally {
+          isSubmitting = false;
+        }
       });
     });
   }
