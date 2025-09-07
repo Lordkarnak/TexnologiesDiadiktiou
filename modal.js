@@ -15,6 +15,21 @@ document.addEventListener("DOMContentLoaded", () => {
         modal = document.getElementById('loginModal');
       } else if (buttonType == 'register') {
         modal = document.getElementById('registerModal');
+      } else if (buttonType == 'edit') {
+        modal = document.getElementById('editModal');
+        fetch("index.php?action=getUser")
+        .then(response => response.json())
+        .then(data => {
+          const form = modal.querySelector('form');
+          form.firstname.value = data.first_name;
+          form.lastname.value = data.last_name;
+          form.username.value = data.username;
+          form.email.value = data.email;
+          form.password.value = ""; // leave empty for security
+        })
+        .catch(err => {
+          console.error("Error fetching user data", err);
+        });
       }
 
       // Reset form and error message

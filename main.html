@@ -29,9 +29,8 @@
     </nav>
 
     <div class="sign-container">
-      <div class="sign-buttons">
-        <div data-type="register" class="auth-button-modal buttons"><span>ΕΓΓΡΑΦΗ</span></div>
-        <div data-type="login" class="auth-button-modal buttons"><span>ΕΙΣΟΔΟΣ</span></div>
+      <div class="profile-icon auth-button-modal" data-type="edit">
+        <img src="Images/user-icon.png" alt="User Icon">
       </div>
     </div>
 
@@ -42,7 +41,39 @@
     <div class="feed-item"><img></div>
     <div class="feed-item"><img></div>
     <div class="feed-item"><img></div>
-    <!-- Add more items as needed -->
+
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="editForm" class="register-form" method="post">
+          <div class="label-input">
+            <label for="firstname">ΟΝΟΜΑ</label>
+            <input type="text" name="firstname" required>
+          </div>
+          <div class="label-input">
+            <label for="lastname">ΕΠΩΝΥΜΟ</label>
+            <input type="text" name="lastname" required>
+          </div>
+          <div class="label-input">
+            <label for="username">ΟΝΟΜΑ ΧΡΗΣΤΗ</label>
+            <input type="text" name="username" required>
+          </div>
+          <div class="label-input">
+            <label for="email">EMAIL</label>
+            <input type="email" name="email" required>
+          </div>
+          <div class="label-input">
+            <label for="password">ΚΩΔΙΚΟΣ</label>
+            <input type="password" name="password" required>
+          </div>
+          <div class="buttons auth-button"><span>ΑΝΑΣΕΩΣΗ</span></div>
+          <div class="error-messagebox" style="color:red; font-weight:bold; text-align:center; margin-top:10px;">
+            &nbsp;
+          </div>
+        </form>
+      </div>
+    </div>
+    
   </div>
 </div>
 

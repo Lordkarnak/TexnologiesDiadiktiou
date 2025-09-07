@@ -68,6 +68,50 @@ class Controller
  
         return ['closeModal' => 'true'];
     }
+
+    public function getUser() {
+        if (!isset($_SESSION['user_id'])) {
+            throw new Exception("Not logged in.");
+        }
+
+        $id = $_SESSION['user_id'];
+        $stmt = $this->connection->prepare("SELECT first_name, last_name, username, email FROM user_data WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            return $row;
+        } else {
+            throw new Exception("User not found.");
+        }
+    }
+
+    public function edit() {
+        if (!isset($_SESSION['user_id'])) {
+            throw new Exception("Not logged in.");
+        }
+
+        $id = $_SESSION['user_id'];
+        $first_name = $this->validate("firstname", true);
+        $last_name  = $this->validate("lastname", true);
+        $username   = $this->validate("username", true);
+        $email      = $this->validate("email", true);
+        $password   = $this->validate("password", true);
+
+        $sql = "UPDATE user_data 
+                SET first_name = ?, last_name = ?, username = ?, email = ?, password = ?
+                WHERE id = ?";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bind_param("sssssi", $first_name, $last_name, $username, $email, $password, $id);
+
+        if (!$stmt->execute()) {
+            throw new Exception($this->connection->error);
+        }
+
+        return ["closeModal" => true];
+    }
     
 
     function validate($input, $mandatory=false) {

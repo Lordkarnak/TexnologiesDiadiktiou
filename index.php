@@ -1,4 +1,6 @@
 <?php
+session_start();  // <-- MUST be first line
+
 include("./src/controller.php"); // Σκέτη / σε path είναι το root path του σέρβερ 
 include("./src/database.php");
 
